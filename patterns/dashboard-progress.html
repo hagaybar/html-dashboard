@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- PATTERN: dashboard-progress (static/interactive)
+     WHEN: progress + timeline of a rollout.
+     SLOTS: TITLE, SUBTITLE, STEPS (repeat <li> per phase).
+     MODE: static-or-interactive. Link /assets/base.css; comms.js included for
+           optional two-way Claude link (no ping buttons — read-only by default). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->Rollout progress</title>
+  <link rel="stylesheet" href="/assets/base.css" />
+</head>
+<body>
+  <header class="dash-head">
+    <h1><!-- SLOT: TITLE -->Rollout progress</h1>
+    <div class="sub"><!-- SLOT: SUBTITLE --></div>
+  </header>
+  <ol id="timeline"><!-- SLOT: STEPS -->
+    <li class="card" data-id="s1"><span class="badge info">in progress</span> <b>Phase 1</b>
+      <p class="muted">detail</p></li>
+  </ol>
+  <script src="/assets/comms.js"></script>
+  <script>
+    // Optional: load and reflect state (e.g. highlight completed phases).
+    // No ping buttons — this is a read-only progress view by default.
+    // To add interactivity, add a ping button per step and follow the
+    // dashboard-status-cards pattern.
+    if (typeof Dash !== "undefined") {
+      Dash.loadState().then(st => {
+        const items = document.querySelectorAll("#timeline [data-id]");
+        items.forEach(li => {
+          const v = st[li.dataset.id];
+          if (v && v.badge) {
+            const badge = li.querySelector(".badge");
+            if (badge) { badge.className = "badge " + v.badge; badge.textContent = v.badge; }
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

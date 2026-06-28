@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- PATTERN: data-table (static)
+     WHEN: sortable/filterable tabular results.
+     SLOTS: TITLE, SUBTITLE, HEADERS (th elements), ROWS (tr/td elements).
+     MODE: static — open as a file. Self-contained, no server needed. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->Results</title>
+  <style>
+    :root { --bg:#0f1116; --ink:#e6e9ef; --muted:#9aa4b2; --line:#2b313c; --panel:#181b22; --panel-2:#1f242d; --accent:#6ea8fe; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); padding:24px;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; line-height:1.5; }
+    h1 { margin:0 0 4px; } .sub { color:var(--muted); margin-bottom:24px; }
+    input#filter { background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font:inherit; width:100%; max-width:360px; }
+    input#filter::placeholder { color:var(--muted); }
+    table { border-collapse:collapse; width:100%; }
+    th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-weight:600; cursor:pointer; user-select:none; background:var(--panel); }
+    th:hover { color:var(--accent); }
+    tr:hover td { background:var(--panel-2); }
+  </style>
+</head>
+<body>
+  <h1><!-- SLOT: TITLE -->Results</h1>
+  <div class="sub"><!-- SLOT: SUBTITLE --></div>
+  <input id="filter" placeholder="filter…" style="margin-bottom:12px;padding:6px 10px" />
+  <table id="t">
+    <thead><tr><!-- SLOT: HEADERS --><th>Col A</th><th>Col B</th></tr></thead>
+    <tbody><!-- SLOT: ROWS --><tr><td>a</td><td>b</td></tr></tbody>
+  </table>
+  <script>
+    // click-to-sort + live filter (no deps)
+    const t = document.getElementById("t");
+    t.querySelectorAll("th").forEach((th, i) => th.addEventListener("click", () => {
+      const rows = [...t.tBodies[0].rows];
+      const asc = th.dataset.asc !== "true"; th.dataset.asc = asc;
+      rows.sort((a, b) => a.cells[i].textContent.localeCompare(b.cells[i].textContent, undefined, {numeric:true}) * (asc?1:-1));
+      rows.forEach(r => t.tBodies[0].appendChild(r));
+    }));
+    document.getElementById("filter").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase();
+      [...t.tBodies[0].rows].forEach(r => r.style.display = r.textContent.toLowerCase().includes(q) ? "" : "none");
+    });
+  </script>
+</body>
+</html>

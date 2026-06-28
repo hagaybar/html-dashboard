@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- PATTERN: dashboard-status-cards (interactive)
+     WHEN: track a multi-step workflow with a live browser<->Claude link.
+     SLOTS: TITLE, SUBTITLE, CARDS (repeat the .card block per step).
+     MODE: interactive — requires the engine server. Each card has a status
+           select, a notes box, and a "Ping Claude" button; Claude's replies
+           render inline via /assets/comms.js. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->Workflow dashboard</title>
+  <link rel="stylesheet" href="/assets/base.css" />
+</head>
+<body>
+  <header class="dash-head">
+    <h1><!-- SLOT: TITLE -->Workflow dashboard</h1>
+    <div class="sub"><!-- SLOT: SUBTITLE -->Live status; ping Claude on any card.</div>
+  </header>
+  <div class="grid" id="cards">
+    <!-- SLOT: CARDS — duplicate this block per step; give each a unique data-id -->
+    <section class="card" data-id="step-1">
+      <h3>Step 1 title</h3>
+      <p class="muted">What this step verifies.</p>
+      <label>Status
+        <select class="status">
+          <option value="todo">To do</option>
+          <option value="doing">In progress</option>
+          <option value="done">Done</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </label>
+      <textarea class="notes" rows="2" placeholder="notes…" style="width:100%;margin-top:8px"></textarea>
+      <div style="margin-top:8px"><button class="ping">💬 Ping Claude</button></div>
+      <div class="replies"></div>
+    </section>
+  </div>
+  <script src="/assets/comms.js"></script>
+  <script>
+    const cards = [...document.querySelectorAll(".card")];
+    function collect() {
+      const s = {};
+      cards.forEach(c => {
+        s[c.dataset.id] = { status: c.querySelector(".status").value, notes: c.querySelector(".notes").value };
+      });
+      return s;
+    }
+    async function init() {
+      const st = await Dash.loadState();
+      cards.forEach(c => {
+        const v = st[c.dataset.id]; if (!v) return;
+        c.querySelector(".status").value = v.status || "todo";
+        c.querySelector(".notes").value = v.notes || "";
+      });
+    }
+    cards.forEach(c => {
+      c.querySelector(".status").addEventListener("change", () => Dash.saveState(collect()));
+      c.querySelector(".notes").addEventListener("input", () => Dash.saveState(collect()));
+      c.querySelector(".ping").addEventListener("click", () => {
+        const v = collect()[c.dataset.id];
+        Dash.ping(c.dataset.id, v);
+        c.querySelector(".ping").textContent = "💬 Pinged — waiting…";
+      });
+    });
+    Dash.onReplies(reply => {
+      const id = reply.testId;
+      const host = id ? document.querySelector(`.card[data-id="${id}"] .replies`)
+                      : document.querySelector(".replies");
+      if (!host) return;
+      const div = document.createElement("div");
+      div.className = "reply " + (reply.level || "info");
+      div.textContent = reply.text;
+      host.appendChild(div);
+    });
+    init();
+  </script>
+</body>
+</html>

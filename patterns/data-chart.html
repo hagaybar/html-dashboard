@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- PATTERN: data-chart (static)
+     WHEN: simple bar/line trend.
+     SLOTS: TITLE, SUBTITLE, DATA (array of {label, value} in the script).
+     MODE: static — open as a file. Dependency-free inline SVG bar chart. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->Trend</title>
+  <style>
+    :root { --bg:#0f1116; --ink:#e6e9ef; --muted:#9aa4b2; --line:#2b313c; }
+    body { margin:0; background:var(--bg); color:var(--ink); padding:24px;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    h1 { margin:0 0 4px; } .sub { color:var(--muted); margin-bottom:24px; }
+    svg { background:#181b22; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <h1><!-- SLOT: TITLE -->Trend</h1>
+  <div class="sub"><!-- SLOT: SUBTITLE --></div>
+  <svg id="chart" width="640" height="240" role="img"></svg>
+  <script>
+    // SLOT: DATA — array of {label, value}
+    const data = [{label:"A",value:3},{label:"B",value:7},{label:"C",value:5}];
+    const svg = document.getElementById("chart"), W=640,H=240,P=30;
+    const max = Math.max(...data.map(d=>d.value),1), bw = (W-2*P)/data.length*0.7;
+    data.forEach((d,i)=>{
+      const x = P + i*(W-2*P)/data.length, h=(H-2*P)*d.value/max;
+      const r=document.createElementNS("http://www.w3.org/2000/svg","rect");
+      r.setAttribute("x",x); r.setAttribute("y",H-P-h); r.setAttribute("width",bw); r.setAttribute("height",h); r.setAttribute("fill","#6ea8fe");
+      svg.appendChild(r);
+      const label=document.createElementNS("http://www.w3.org/2000/svg","text");
+      label.setAttribute("x",x+bw/2); label.setAttribute("y",H-P+14);
+      label.setAttribute("text-anchor","middle"); label.setAttribute("fill","#9aa4b2"); label.setAttribute("font-size","12");
+      label.textContent=d.label;
+      svg.appendChild(label);
+    });
+  </script>
+</body>
+</html>

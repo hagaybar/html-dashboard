@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- PATTERN: diagram-state (static)
+     WHEN: lifecycle / state machines.
+     SLOTS: TITLE, SUBTITLE, MERMAID (a stateDiagram-v2 definition).
+     MODE: static — open as a file. Loads vendored Mermaid via the engine if
+           served, else falls back to the CDN script below. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->State diagram</title>
+  <style>
+    :root { --bg:#0f1116; --ink:#e6e9ef; --muted:#9aa4b2; --line:#2b313c; }
+    body { margin:0; background:var(--bg); color:var(--ink); padding:24px;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    h1 { margin:0 0 4px; } .sub { color:var(--muted); margin-bottom:24px; }
+    .diagram { background:#181b22; border:1px solid var(--line); border-radius:12px; padding:20px; }
+  </style>
+</head>
+<body>
+  <h1><!-- SLOT: TITLE -->State diagram</h1>
+  <div class="sub"><!-- SLOT: SUBTITLE -->What this diagram shows.</div>
+  <div class="diagram">
+    <pre class="mermaid">
+<!-- SLOT: MERMAID -->
+stateDiagram-v2
+  [*] --> defined
+  defined --> impl_running
+  impl_running --> testing
+  testing --> merged
+  testing --> aborted
+  merged --> [*]
+  aborted --> [*]
+    </pre>
+  </div>
+  <script>
+    // Prefer the engine-vendored asset; fall back to CDN for standalone files.
+    function boot() { window.mermaid && window.mermaid.initialize({ startOnLoad: true, theme: "dark" }); }
+    var s = document.createElement("script");
+    s.src = "/assets/mermaid.min.js";
+    s.onload = boot;
+    s.onerror = function () {
+      var c = document.createElement("script");
+      c.src = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
+      c.onload = boot; document.head.appendChild(c);
+    };
+    document.head.appendChild(s);
+  </script>
+</body>
+</html>

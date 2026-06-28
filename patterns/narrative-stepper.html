@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- PATTERN: narrative-stepper (static)
+     WHEN: guided multi-step explanation.
+     SLOTS: TITLE, SUBTITLE, STEPS (repeat <li> per step).
+     MODE: static — open as a file. Self-contained, no server needed. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->Walkthrough</title>
+  <style>
+    :root {
+      --bg:#0f1116; --panel:#181b22; --line:#2b313c;
+      --ink:#e6e9ef; --muted:#9aa4b2;
+      --radius:12px;
+      --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); line-height:1.5; padding:24px; }
+    h1 { margin:0 0 .4em; } .sub { color:var(--muted); margin-bottom:24px; }
+    ol { padding-left:24px; max-width:720px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px; }
+    .card h3 { font-size:15px; margin:0 0 .4em; }
+    .muted { color:var(--muted); }
+  </style>
+</head>
+<body>
+  <h1><!-- SLOT: TITLE -->Walkthrough</h1>
+  <div class="sub"><!-- SLOT: SUBTITLE --></div>
+  <ol style="max-width:720px"><!-- SLOT: STEPS — repeat <li> per step -->
+    <li class="card" style="margin-bottom:12px"><h3>Step title</h3><p class="muted">Explanation.</p></li>
+  </ol>
+</body>
+</html>

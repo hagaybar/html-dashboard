@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- PATTERN: compare-decision-matrix (static)
+     WHEN: weighted option scoring.
+     SLOTS: TITLE, SUBTITLE, ROWS (tr/td elements), TOTAL_A, TOTAL_B.
+     MODE: static — open as a file. Self-contained, no server needed. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- SLOT: TITLE -->Decision matrix</title>
+  <style>
+    :root { --bg:#0f1116; --ink:#e6e9ef; --muted:#9aa4b2; --line:#2b313c; --panel:#181b22; --panel-2:#1f242d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); padding:24px;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; line-height:1.5; }
+    h1 { margin:0 0 4px; } .sub { color:var(--muted); margin-bottom:24px; }
+    table { border-collapse:collapse; width:100%; }
+    th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-weight:600; background:var(--panel); }
+    tfoot th { color:var(--ink); background:var(--panel-2); }
+    tr:hover td { background:var(--panel-2); }
+  </style>
+</head>
+<body>
+  <h1><!-- SLOT: TITLE -->Decision matrix</h1>
+  <div class="sub"><!-- SLOT: SUBTITLE --></div>
+  <table>
+    <thead><tr><th>Criterion</th><th>Weight</th><th>Option A</th><th>Option B</th></tr></thead>
+    <tbody><!-- SLOT: ROWS --><tr><td>Criterion 1</td><td>3</td><td>4</td><td>2</td></tr></tbody>
+    <tfoot><tr><th>Weighted total</th><th></th><th><!-- SLOT: TOTAL_A --></th><th><!-- SLOT: TOTAL_B --></th></tr></tfoot>
+  </table>
+</body>
+</html>
