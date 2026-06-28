@@ -43,6 +43,9 @@ options") — the skill triggers on those intents.
 
 ## Requirements
 
+- **[Claude Code](https://claude.com/claude-code)** — this is a Claude Code
+  skill. It's loaded from `~/.claude/skills/` and invoked with the `/dashboard`
+  command or natural language; it does nothing on its own without Claude Code.
 - **Static** mode: a browser. Diagrams use vendored [Mermaid](https://mermaid.js.org/)
   (with a CDN fallback for standalone files).
 - **Interactive** mode: **Python 3** (standard library only) for the engine
