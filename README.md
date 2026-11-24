@@ -1,3 +1,5 @@
+> **Archived 2026-11-24.** This was a one-time publication (2026-06-28) and is now out of date. The maintained version is the `html-dashboard` skill in the owner's dotfiles (`claude/skills/html-dashboard`).
+
 # html-dashboard
 
 A [Claude Code](https://claude.com/claude-code) skill that turns an idea into a
